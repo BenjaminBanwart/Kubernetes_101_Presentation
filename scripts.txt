@@ -1,0 +1,29 @@
+dotnet new webapi -n HelloWorldApp
+
+----------------
+
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+WORKDIR /app
+EXPOSE 80
+
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+COPY . .
+RUN dotnet restore "HelloWorldApp.csproj"
+RUN dotnet build "HelloWorldApp.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "HelloWorldApp.csproj" -c Release -o /app/publish
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "HelloWorldApp.dll"]
+
+-----------------
+
+docker build -t <dockerhub-username>/helloworldapp:latest .
+
+-----------------
+
+docker push <dockerhub-username>/helloworldapp:latest
