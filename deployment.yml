@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: helloworldapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: helloworldapp
+  template:
+    metadata:
+      labels:
+        app: helloworldapp
+    spec:
+      containers:
+      - name: helloworldapp
+        image: <dockerhub-username>/helloworldapp:latest
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - mountPath: /app/mnt
+          name: storage
+      volumes:
+      - name: storage
+        persistentVolumeClaim:
+          claimName: local-pvc
