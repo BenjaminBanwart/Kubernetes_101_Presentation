@@ -1,4 +1,8 @@
-dotnet new webapi -n HelloWorldApp
+dotnet new web -o HelloWorldApp
+
+----------------
+
+builder.WebHost.UseUrls("http://*:80");
 
 ----------------
 
